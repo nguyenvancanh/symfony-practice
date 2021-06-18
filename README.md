@@ -394,3 +394,50 @@ class UserType extends AbstractType
 }
 ```
 
+## Tạo giao diện đăng nhập
+
+Sử dụng lệnh
+
+```
+php bin/console make:auth
+```
+
+Sau khi hoàn thành lệnh trên, bạn sẽ đc file src/Security/LoginFormAuthenticator.php and templates/security/login.html.twig. Tiếp theo mở controller và edit
+
+```
+// src/Controller/SecurityController.php
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+class SecurityController extends AbstractController
+{
+    /**
+     * @Route("/", name="app_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/logout", name="app_logout")
+     */
+    public function logout()
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+}
+```
+
+Đến đây, ứng dụng của chúng ta đã cơ bản hoàn thành, bài sau tôi sẽ hướng dẫn các bạn cách config DB và s
